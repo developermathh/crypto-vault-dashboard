@@ -1,4 +1,4 @@
-name: Unzip and Deploy to GitHub Pages
+name: Compilar y Desplegar Vite-React a GitHub Pages
 
 on:
   push:
@@ -15,28 +15,42 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build-and-deploy:
     environment:
       name: github-pages
-      url: ${{ steps: deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: Extraer proyecto ZIP
+        run: |
+          unzip crypto-vault.zip -d ./app
+          # Mover los archivos a la raíz si quedaron dentro de subcarpetas
+          if [ -d "./app/project" ]; then cp -r ./app/project/* .; elif [ -d "./app/crypto-vault" ]; then cp -r ./app/crypto-vault/* .; else cp -r ./app/* .; fi
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Compilar Proyecto (Build Vite)
+        run: npm run build
+
+      - name: Configurar Páginas
         uses: actions/configure-pages@v5
 
-      - name: Unzip Project
-        run: |
-          unzip crypto-vault.zip -d ./public_html
-          
-      - name: Upload artifact
+      - name: Subir artefacto compilado
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './public_html'
+          path: './dist'
 
-      - name: Deploy to GitHub Pages
+      - name: Desplegar a GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
         
