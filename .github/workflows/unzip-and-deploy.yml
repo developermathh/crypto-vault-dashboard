@@ -27,7 +27,6 @@ jobs:
       - name: Extraer proyecto ZIP
         run: |
           unzip crypto-vault.zip -d ./app
-          # Mover los archivos a la raíz si quedaron dentro de subcarpetas
           if [ -d "./app/project" ]; then cp -r ./app/project/* .; elif [ -d "./app/crypto-vault" ]; then cp -r ./app/crypto-vault/* .; else cp -r ./app/* .; fi
 
       - name: Configurar Node.js
@@ -35,6 +34,14 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+
+      - name: Inyectar Base Path en Configuración de Vite
+        run: |
+          if [ -f "vite.config.ts" ]; then
+            sed -i "s/defineConfig({/defineConfig({\n  base: '\/crypto-vault-dashboard\/',/g" vite.config.ts
+          elif [ -f "vite.config.js" ]; then
+            sed -i "s/defineConfig({/defineConfig({\n  base: '\/crypto-vault-dashboard\/',/g" vite.config.js
+          fi
 
       - name: Instalar dependencias
         run: npm ci || npm install
