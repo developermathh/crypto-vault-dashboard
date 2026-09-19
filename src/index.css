@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-base-950 text-slate-300 font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: rgba(245, 158, 11, 0.20); color: #fff; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #0B0C0E; }
+  ::-webkit-scrollbar-thumb { background: #222630; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2A2E3A; }
+}
+
+@layer components {
+  /* Solid containers — no blur, no translucency */
+  .panel {
+    @apply rounded-xl border border-[#222630] bg-[#13151A];
+  }
+  .panel-800 {
+    @apply rounded-xl border border-[#222630] bg-[#171A21];
+  }
+  .panel-900 {
+    @apply rounded-xl border border-[#222630] bg-[#0E1013];
+  }
+  /* GPU-accelerated dynamic wrapper */
+  .gpu {
+    @apply transform-gpu will-change-transform;
+  backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .label-xs {
+    @apply text-[0.6875rem] font-medium uppercase tracking-wider text-slate-500;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    @apply font-mono;
+  }
+  .btn-sm {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200 active:scale-[0.98];
+  }
+  .btn-gold {
+    @apply btn-sm bg-gold/10 text-gold border border-gold/30 hover:bg-gold/15;
+  }
+  .btn-ghost {
+    @apply btn-sm border border-[#222630] bg-[#171A21] text-slate-400 hover:text-slate-200 hover:border-[#2A2E3A];
+  }
+  .btn-pos {
+    @apply btn-sm bg-pos/10 text-pos border border-pos/30 hover:bg-pos/15;
+  }
+  .input-field {
+    @apply w-full rounded-lg border border-[#222630] bg-[#0E1013] px-3 py-2 text-sm text-white placeholder-slate-600 transition-colors duration-200 focus:border-gold/40 focus:outline-none;
+  }
+  .pulse-dot {
+    @apply relative inline-flex h-1.5 w-1.5 rounded-full bg-pos;
+  }
+  .pulse-dot::after {
+    content: '';
+    @apply absolute -inset-1 rounded-full bg-pos/30;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  .divider {
+    @apply border-t border-[#222630];
+  }
+}
